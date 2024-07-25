@@ -70,6 +70,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text('Access: ${access.permanent ? "Permanent" : "Temporary"}'),
+        if (access.balanceCheck) Text('Balance Check: Enabled'),
         if (access.loan != null) _buildLoanDetails(access.loan!),
         if (access.bill != null) _buildBillDetails(access.bill!),
         SizedBox(height: 10),

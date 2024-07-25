@@ -1,8 +1,10 @@
+import 'package:flex_users/loan_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'companion_form.dart';
 import 'companions.dart'; // Import the CompanionsScreen
+import 'models.dart'; // Import the Loan model
 
 class BankAccountSummaryScreen extends StatefulWidget {
   final String loggedInUser;
@@ -17,6 +19,7 @@ class _BankAccountSummaryScreenState extends State<BankAccountSummaryScreen> {
   double accountBalance = 0.0; // Initialize balance
   bool isLoading = true; // Loading indicator
   List<dynamic> companionsList = []; // To store companions data
+  List<Loan> loans = []; // To store loans data
 
   @override
   void initState() {
@@ -37,7 +40,9 @@ class _BankAccountSummaryScreenState extends State<BankAccountSummaryScreen> {
         setState(() {
           accountNumber = responseData['accountNumber'];
           accountBalance = double.parse(responseData['accountBalance']);
-          companionsList = responseData['companions']; // Update companions list
+          companionsList = responseData['companions'];
+          loans = (responseData['loans'] as List).map((json) => Loan.fromJson(json)).toList(); // Update loans list
+          print(loans);
           isLoading = false;
         });
       } else {
@@ -149,7 +154,12 @@ class _BankAccountSummaryScreenState extends State<BankAccountSummaryScreen> {
                       icon: Icons.home,
                       label: 'Loans',
                       onTap: () {
-                        // Navigate to loans screen or perform action
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoansScreen(loans: loans),
+                          ),
+                        );
                       },
                     ),
                     _buildServiceItem(

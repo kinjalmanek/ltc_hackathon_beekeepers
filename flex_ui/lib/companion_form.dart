@@ -86,6 +86,9 @@ class _CompanionFormScreenState extends State<CompanionFormScreen> {
                       setState(() {
                         accessType = value;
                         accessLevel = 'Permanent Access';
+                        // Reset start date and end date when switching access type
+                        startDate = null;
+                        endDate = null;
                       });
                     },
                   ),
@@ -110,8 +113,9 @@ class _CompanionFormScreenState extends State<CompanionFormScreen> {
                   Expanded(
                     flex: 1,
                     child: ElevatedButton(
-                      onPressed: () {
-                        // Implement logic to pick start date
+                      onPressed: accessType == 'permanent'
+                          ? null
+                          : () {
                         _selectStartDate(context);
                       },
                       child: Text('Select Start Date'),
@@ -121,8 +125,9 @@ class _CompanionFormScreenState extends State<CompanionFormScreen> {
                   Expanded(
                     flex: 1,
                     child: ElevatedButton(
-                      onPressed: () {
-                        // Implement logic to pick end date
+                      onPressed: accessType == 'permanent'
+                          ? null
+                          : () {
                         _selectEndDate(context);
                       },
                       child: Text('Select End Date'),
@@ -133,7 +138,6 @@ class _CompanionFormScreenState extends State<CompanionFormScreen> {
               SizedBox(height: 20.0),
               ElevatedButton(
                 onPressed: () {
-                  // Implement logic to add companion
                   _addCompanion();
                 },
                 child: Text('Add'),

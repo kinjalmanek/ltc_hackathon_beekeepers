@@ -114,6 +114,7 @@ public class PortfolioService {
                 permRepo.save(permission);
             }
         }
+        else
         {
             PermissionId id = new PermissionId();
             id.setEmail(request.getEmail());

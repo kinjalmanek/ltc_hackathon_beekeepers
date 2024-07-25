@@ -71,3 +71,30 @@ VALUES
 ('vaibhav@gmail.com','Vaibhav', 'AC001999', '100000','BILL', null, null, '2000', 'PHONE BILL', 'MONTHLY', '01-JAN-2024'),
 ('vaibhav@gmail.com','Vaibhav', 'AC001999', '100000','BILL', null, null, '5000', 'ELECTRICITY BILL', 'MONTHLY', '05-JAN-2024');
 
+INSERT INTO portfolio ( email, name, account_number, account_balance, product_type, loan_type, loan_tenure, amount, bill_type, bill_frequency, bill_date ) 
+VALUES
+('rakesh@gmail.com','Rakesh Kotian', 'AC002000', '200000','BALANCE', null, null, '0', null, null, null);
+
+INSERT INTO portfolio ( email, name, account_number, account_balance, product_type, loan_type, loan_tenure, amount, bill_type, bill_frequency, bill_date ) 
+VALUES
+('rakesh@gmail.com','Rakesh Kotian', 'AC002000', '200000','LOAN', 'HOME LOAN', '20', '2000000', null, null, null),
+('rakesh@gmail.com','Rakesh Kotian', 'AC002000', '200000','BILL', null, null, '2000', 'PHONE BILL', 'MONTHLY', '01-JAN-2024');
+
+INSERT INTO portfolio ( email, name, account_number, account_balance, product_type, loan_type, loan_tenure, amount, bill_type, bill_frequency, bill_date ) 
+VALUES
+('ramdas@gmail.com','Ramdas', 'AC002001', '300000','BALANCE', null, null, '0', null, null, null);
+
+INSERT INTO portfolio ( email, name, account_number, account_balance, product_type, loan_type, loan_tenure, amount, bill_type, bill_frequency, bill_date ) 
+VALUES
+('ramdas@gmail.com','Ramdas', 'AC002001', '300000','LOAN', 'HOME LOAN', '20', '2000000', null, null, null),
+('ramdas@gmail.com','Ramdas', 'AC002001', '300000','BILL', null, null, '2000', 'ELECTRICITY BILL', 'MONTHLY', '01-JAN-2024');
+
+
+INSERT INTO portfolio ( email, name, account_number, account_balance, product_type, loan_type, loan_tenure, amount, bill_type, bill_frequency, bill_date ) 
+VALUES
+('sara@gmail.com','Sara', 'AC002002', '800','BALANCE', null, null, '0', null, null, null);
+
+INSERT INTO portfolio ( email, name, account_number, account_balance, product_type, loan_type, loan_tenure, amount, bill_type, bill_frequency, bill_date ) 
+VALUES
+('sara@gmail.com','Sara', 'AC002002', '800','LOAN', 'EDUCATION LOAN', '4', '2000000', null, null, null);
+

@@ -110,6 +110,7 @@ public class PortfolioService {
                 permission.setCanView(true);
                 permission.setFullAccess(true);
                 permission.setAccessPermanent(true);
+                permission.setStartDate(LocalDate.now());
                 permRepo.save(permission);
             }
         }

@@ -1,3 +1,4 @@
+import 'package:flex_users/account_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -13,7 +14,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
 
   Future<void> login() async {
-    final String url = 'https://ltc-hackathon-beekeepers-wct627xdfq-el.a.run.app/signin'; // replace with your backend URL
+    const String url = "https://ltc-hackathon-beekeepers-wct627xdfq-el.a.run.app/signin"; // replace with your backend URL
     print("Login button pressed");
     try {
       final response = await http.post(
@@ -46,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
                       Navigator.of(context).pop();
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => HomePage()),
+                        MaterialPageRoute(builder: (context) => BankAccountSummaryScreen()),
                       );
                     },
                   ),

@@ -1,11 +1,13 @@
-import 'package:flex_users/companion_form.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'companion_form.dart';
+import 'companions.dart'; // Import the CompanionsScreen
 
 class BankAccountSummaryScreen extends StatefulWidget {
-  String loggedInUser='';
+  final String loggedInUser;
   BankAccountSummaryScreen({required this.loggedInUser});
+
   @override
   _BankAccountSummaryScreenState createState() => _BankAccountSummaryScreenState();
 }
@@ -14,6 +16,7 @@ class _BankAccountSummaryScreenState extends State<BankAccountSummaryScreen> {
   String accountNumber = 'XXXX-XXXX-1234'; // Replace with actual account number
   double accountBalance = 0.0; // Initialize balance
   bool isLoading = true; // Loading indicator
+  List<dynamic> companionsList = []; // To store companions data
 
   @override
   void initState() {
@@ -23,7 +26,6 @@ class _BankAccountSummaryScreenState extends State<BankAccountSummaryScreen> {
   }
 
   Future<void> fetchData() async {
-    // Replace with your API endpoint URL
     final String apiUrl = 'https://ltc-hackathon-beekeepers-wct627xdfq-el.a.run.app/portfolio?email=${widget.loggedInUser}';
 
     try {
@@ -31,22 +33,20 @@ class _BankAccountSummaryScreenState extends State<BankAccountSummaryScreen> {
       final response = await http.get(Uri.parse(apiUrl));
 
       if (response.statusCode == 200) {
-        // If the call to the server was successful, parse JSON data
         final responseData = json.decode(response.body);
         setState(() {
-          accountNumber = responseData['accountNumber']; // Update account number
-          accountBalance = double.parse(responseData['accountBalance']); // Update account balance
-          isLoading = false; // Data has been loaded
+          accountNumber = responseData['accountNumber'];
+          accountBalance = double.parse(responseData['accountBalance']);
+          companionsList = responseData['companions']; // Update companions list
+          isLoading = false;
         });
       } else {
-        // If the server did not return a 200 OK response
         throw Exception('Failed to load data');
       }
     } catch (e) {
-      // Catch any errors that occur during the API call
       print('Error: $e');
       setState(() {
-        isLoading = false; // Update loading state
+        isLoading = false;
       });
     }
   }
@@ -96,17 +96,19 @@ class _BankAccountSummaryScreenState extends State<BankAccountSummaryScreen> {
                   fontSize: 28,
                 ),
               ),
-              SizedBox(height: 20), // Add spacing between balance and button
+              SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => CompanionFormScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => CompanionFormScreen(),
+                    ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50), // Rounded corners
+                    borderRadius: BorderRadius.circular(50),
                   ),
                   padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                 ),
@@ -117,13 +119,32 @@ class _BankAccountSummaryScreenState extends State<BankAccountSummaryScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 40), // Add additional spacing at the bottom
+              SizedBox(height: 40),
               Expanded(
                 child: GridView.count(
                   crossAxisCount: 2,
                   mainAxisSpacing: 20,
                   crossAxisSpacing: 20,
                   children: <Widget>[
+                    _buildServiceItem(
+                      icon: Icons.people,
+                      label: 'Companions',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CompanionsScreen(companionsList: companionsList),
+                          ),
+                        );
+                      },
+                    ),
+                    _buildServiceItem(
+                      icon: Icons.favorite,
+                      label: 'Admirers',
+                      onTap: () {
+                        // Navigate to admirers screen or perform action
+                      },
+                    ),
                     _buildServiceItem(
                       icon: Icons.home,
                       label: 'Loans',
@@ -136,20 +157,6 @@ class _BankAccountSummaryScreenState extends State<BankAccountSummaryScreen> {
                       label: 'Bills',
                       onTap: () {
                         // Navigate to bills screen or perform action
-                      },
-                    ),
-                    _buildServiceItem(
-                      icon: Icons.people,
-                      label: 'Companions',
-                      onTap: () {
-                        // Navigate to companions screen or perform action
-                      },
-                    ),
-                    _buildServiceItem(
-                      icon: Icons.favorite,
-                      label: 'Admirers',
-                      onTap: () {
-                        // Navigate to admirers screen or perform action
                       },
                     ),
                     _buildServiceItem(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'home_page.dart';  // Import the HomePage
 
 class LoginPage extends StatefulWidget {
   @override
@@ -32,8 +33,26 @@ class _LoginPageState extends State<LoginPage> {
       if (response.statusCode == 200) {
         if (response.body == 'Success') {
           // Handle success
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Login successful!')),
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("Login Successful"),
+                content: Text("You will be redirected to the Home Page."),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text("OK"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomePage()),
+                      );
+                    },
+                  ),
+                ],
+              );
+            },
           );
         } else {
           // Handle error

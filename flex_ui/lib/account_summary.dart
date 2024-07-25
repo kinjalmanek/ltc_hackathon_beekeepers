@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'companion_form.dart'; // Import the companion form screen
 
 class BankAccountSummaryScreen extends StatefulWidget {
   @override
@@ -52,7 +53,28 @@ class _BankAccountSummaryScreenState extends State<BankAccountSummaryScreen> {
                   fontSize: 28,
                 ),
               ),
-              SizedBox(height: 40),
+              SizedBox(height: 20), // Add spacing between balance and button
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CompanionFormScreen()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50), // Rounded corners
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                ),
+                child: Text(
+                  'Add Companion',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+              SizedBox(height: 40), // Add additional spacing at the bottom
               Expanded(
                 child: GridView.count(
                   crossAxisCount: 2,

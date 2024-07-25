@@ -11,6 +11,13 @@
 7. Flutter UI
 8. Docker
 
+## Flutter Android Studio Commands
+Use these commands in terminal when the flutter SDK path is configured in the environment local variable in Path :
+1. flutter clean                    - Cleans the build related files.
+2. flutter pub get                  - Reloads all the dependencies and builds the project to run
+3. flutter build apk --release      - Builds the apk. After the build completes, find the APK in the **build/app/outputs/flutter-apk** directory.
+
+
 ## mac set up
 
 1. Install homebrew

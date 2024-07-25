@@ -2,6 +2,7 @@ package ltc.hackathon.ce.flex.auth;
 
 import ltc.hackathon.ce.flex.request.LoginRequest;
 import ltc.hackathon.ce.flex.request.SignUpRequest;
+import ltc.hackathon.ce.flex.request.VerifyRequest;
 import ltc.hackathon.ce.flex.util.EmailGenerator;
 import ltc.hackathon.ce.flex.util.OtpGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +52,21 @@ public class AuthService {
                 userRepo.save(newUser);
                 return "Sign Up Successful";
             }
-            return "User already exists";
+            throw new RuntimeException("User already exists");
         }
-        return "Sign Up Failed";
+        throw new RuntimeException("Sign Up Failed");
+    }
+
+    public String verify(VerifyRequest verifyRequest) {
+        if (Objects.nonNull(verifyRequest)){
+            User user = userRepo.findByEmail(verifyRequest.getEmail()).orElseThrow();
+            if(verifyRequest.getOtp().equalsIgnoreCase(user.getOtp())){
+                return "Success";
+            }
+            else{
+                throw new RuntimeException("Invalid OTP");
+            }
+        }
+        throw new RuntimeException("OTP Verification Failed");
     }
 }

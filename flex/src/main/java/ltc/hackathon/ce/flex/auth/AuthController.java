@@ -3,6 +3,7 @@ package ltc.hackathon.ce.flex.auth;
 
 import ltc.hackathon.ce.flex.request.LoginRequest;
 import ltc.hackathon.ce.flex.request.SignUpRequest;
+import ltc.hackathon.ce.flex.request.VerifyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,16 @@ public class AuthController {
         }
         catch (Exception e){
             return ResponseEntity.internalServerError().body("Cannot sign up : " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/verify")
+    public ResponseEntity<String> verify(@RequestBody VerifyRequest verifyRequest) {
+        try {
+            return new ResponseEntity<String>(authService.verify(verifyRequest), HttpStatus.OK);
+        }
+        catch (Exception e){
+            return ResponseEntity.internalServerError().body("Cannot verify : " + e.getMessage());
         }
     }
 }

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flex_users/login.dart';
 import 'package:flex_users/signup.dart';
+import 'package:flex_users/account_summary.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -38,7 +39,7 @@ class HomePage extends StatelessWidget {
                     height: 30,
                   ),
                   Text(
-                    "XYZ's Flex banking",
+                    "XYZ's Flex Banking",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.grey[700],

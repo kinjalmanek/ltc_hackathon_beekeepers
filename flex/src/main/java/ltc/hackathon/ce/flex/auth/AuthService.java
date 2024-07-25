@@ -61,6 +61,8 @@ public class AuthService {
         if (Objects.nonNull(verifyRequest)){
             User user = userRepo.findByEmail(verifyRequest.getEmail()).orElseThrow();
             if(verifyRequest.getOtp().equalsIgnoreCase(user.getOtp())){
+                user.setActive(true);
+                userRepo.save(user);
                 return "Success";
             }
             else{

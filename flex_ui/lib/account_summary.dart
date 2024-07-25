@@ -1,14 +1,55 @@
+import 'package:flex_users/companion_form.dart';
 import 'package:flutter/material.dart';
-import 'companion_form.dart'; // Import the companion form screen
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class BankAccountSummaryScreen extends StatefulWidget {
+  String loggedInUser='';
+  BankAccountSummaryScreen({required this.loggedInUser});
   @override
   _BankAccountSummaryScreenState createState() => _BankAccountSummaryScreenState();
 }
 
 class _BankAccountSummaryScreenState extends State<BankAccountSummaryScreen> {
   String accountNumber = 'XXXX-XXXX-1234'; // Replace with actual account number
-  double accountBalance = 5000.00; // Replace with actual account balance
+  double accountBalance = 0.0; // Initialize balance
+  bool isLoading = true; // Loading indicator
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch data when the screen loads
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    // Replace with your API endpoint URL
+    final String apiUrl = 'https://ltc-hackathon-beekeepers-wct627xdfq-el.a.run.app/portfolio?email=${widget.loggedInUser}';
+
+    try {
+      // Make GET request
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        // If the call to the server was successful, parse JSON data
+        final responseData = json.decode(response.body);
+        setState(() {
+          accountNumber = responseData['accountNumber']; // Update account number
+          accountBalance = double.parse(responseData['accountBalance']); // Update account balance
+          isLoading = false; // Data has been loaded
+        });
+      } else {
+        // If the server did not return a 200 OK response
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      // Catch any errors that occur during the API call
+      print('Error: $e');
+      setState(() {
+        isLoading = false; // Update loading state
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +58,9 @@ class _BankAccountSummaryScreenState extends State<BankAccountSummaryScreen> {
         title: Text('Bank Account Summary'),
       ),
       body: SafeArea(
-        child: Container(
+        child: isLoading
+            ? Center(child: CircularProgressIndicator())
+            : Container(
           width: double.infinity,
           padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
           child: Column(

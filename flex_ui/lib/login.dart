@@ -47,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
                       Navigator.of(context).pop();
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => BankAccountSummaryScreen()),
+                        MaterialPageRoute(builder: (context) => BankAccountSummaryScreen(loggedInUser:emailController.text)),
                       );
                     },
                   ),

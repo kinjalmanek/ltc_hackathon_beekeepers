@@ -21,5 +21,5 @@ public class Permission {
     boolean isAccessPermanent;
     boolean canView;
     boolean canPay;
-    boolean fullAccess;
+    boolean isFullAccess;
 }

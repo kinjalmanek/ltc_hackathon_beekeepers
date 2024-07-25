@@ -1,3 +1,4 @@
+import 'package:flex_users/companion_edit.dart';
 import 'package:flutter/material.dart';
 import 'models.dart'; // Import the models file
 
@@ -11,11 +12,11 @@ class CompanionsScreen extends StatefulWidget {
 }
 
 class _CompanionsScreenState extends State<CompanionsScreen> {
-
   @override
   Widget build(BuildContext context) {
-    List<Companion> companions = widget.companionsList.map((json) =>
-        Companion.fromJson(json)).toList();
+    List<Companion> companions = widget.companionsList
+        .map((json) => Companion.fromJson(json))
+        .toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -50,8 +51,14 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
               style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             ),
             SizedBox(height: 10),
-            ...companion.accessList.map((access) => _buildAccessDetails(access))
-                .toList(),
+            ...companion.accessList.map((access) => _buildAccessDetails(access)).toList(),
+            SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                navigateToEditScreen(companion);
+              },
+              child: Text('Edit'),
+            ),
           ],
         ),
       ),
@@ -75,7 +82,7 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text('Loan Type: ${loan.loanType}'),
-        Text('Amount: ${loan.loanAmount}'),
+        Text('Amount: \$${loan.loanAmount}'),
         Text('Tenure: ${loan.loanTenure} years'),
       ],
     );
@@ -86,10 +93,24 @@ class _CompanionsScreenState extends State<CompanionsScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text('Bill Type: ${bill.billType}'),
-        Text('Amount: ${bill.billAmount}'),
-        Text('Date: ${bill.billDate.toLocal().toString()}'),
+        Text('Amount: \$${bill.billAmount}'),
+        Text('Date: ${_formatDate(bill.billDate.toString())}'),
         Text('Frequency: ${bill.billFrequency}'),
       ],
+    );
+  }
+
+  String _formatDate(String dateString) {
+    DateTime date = DateTime.parse(dateString);
+    return '${date.toLocal().toString().split(' ')[0]} ${date.toLocal().toString().split(' ')[1]}';
+  }
+
+  void navigateToEditScreen(Companion companion) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CompanionEditScreen(companion: companion),
+      ),
     );
   }
 }

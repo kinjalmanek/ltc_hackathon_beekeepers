@@ -30,17 +30,7 @@ CREATE TABLE portfolio (
     bill_date TIMESTAMP
 );
 
-CREATE TABLE perm (
-    account_email VARCHAR (355) NOT NULL,
-    email VARCHAR (355) NOT NULL,
-    portfolio_id integer NOT NULL,
-    PRIMARY KEY (account_email, email, portfolio_id),
-    start_date TIMESTAMP NOT NULL,
-    end_date TIMESTAMP,
-    is_access_permanent BOOLEAN NOT NULL,
-    can_view BOOLEAN NOT NULL,
-    can_pay BOOLEAN NOT NULL
-);
+CREATE TABLE perm ( account_email VARCHAR (355) NOT NULL, email VARCHAR (355) NOT NULL, portfolio_id integer NOT NULL, PRIMARY KEY (account_email, email, portfolio_id), start_date TIMESTAMP NOT NULL, end_date TIMESTAMP, is_access_permanent BOOLEAN NOT NULL, can_view BOOLEAN NOT NULL, can_pay BOOLEAN NOT NULL, is_full_access BOOLEAN NOT NULL);
 
 
 INSERT INTO users (
@@ -69,3 +59,15 @@ VALUES
 ('rakesh@gmail.com','Rakesh Kotian', 'AC001999', '100000','LOAN', 'HOME LOAN', '20', '2000000', null, null, null),
 ('rakesh@gmail.com','Rakesh Kotian', 'AC001999', '100000','BILL', null, null, '2000', 'PHONE BILL', 'MONTHLY', '01-JAN-2024'),
 ('rakesh@gmail.com','Rakesh Kotian', 'AC001999', '100000','BILL', null, null, '5000', 'ELECTRICITY BILL', 'MONTHLY', '05-JAN-2024');
+
+
+INSERT INTO portfolio ( email, name, account_number, account_balance, product_type, loan_type, loan_tenure, amount, bill_type, bill_frequency, bill_date ) 
+VALUES
+('vaibhav@gmail.com','Vaibhav', 'AC001999', '100000','BALANCE', null, null, '0', null, null, null);
+
+INSERT INTO portfolio ( email, name, account_number, account_balance, product_type, loan_type, loan_tenure, amount, bill_type, bill_frequency, bill_date ) 
+VALUES
+('vaibhav@gmail.com','Vaibhav', 'AC001999', '100000','LOAN', 'HOME LOAN', '20', '2000000', null, null, null),
+('vaibhav@gmail.com','Vaibhav', 'AC001999', '100000','BILL', null, null, '2000', 'PHONE BILL', 'MONTHLY', '01-JAN-2024'),
+('vaibhav@gmail.com','Vaibhav', 'AC001999', '100000','BILL', null, null, '5000', 'ELECTRICITY BILL', 'MONTHLY', '05-JAN-2024');
+

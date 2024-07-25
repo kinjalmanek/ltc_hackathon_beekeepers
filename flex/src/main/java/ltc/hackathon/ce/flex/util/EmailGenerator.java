@@ -14,7 +14,7 @@ public class EmailGenerator {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject(subject);
-        message.setText("You have been added as a trustee. Please sign up/login to access the account and view details");
+        message.setText("You have been added as a companion. Please sign up/login to access the account and view details");
         mailSender.send(message);
     }
 

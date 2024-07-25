@@ -115,7 +115,7 @@ public class PortfolioService {
         permission.setAccessPermanent(request.isAccessPermanent());
         permRepo.save(permission);
         emailGenerator.sendSignUpEmail(request.getEmail(), "Added to portfolio");
-        return "Successfully added trustee to portfolio";
+        return "Successfully added companion to portfolio";
     }
 
     List<Companion> buildCompanions(String accountEmail){

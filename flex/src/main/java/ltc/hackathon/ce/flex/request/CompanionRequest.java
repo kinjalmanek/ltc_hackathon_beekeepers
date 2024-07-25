@@ -17,4 +17,5 @@ public class CompanionRequest {
     boolean canPay;
     String startDate;
     String endDate;
+    boolean isFullAccess;
 }

@@ -105,6 +105,7 @@ public class PortfolioService {
 
         permission.setCanView(request.isCanView());
         permission.setCanPay(request.isCanPay());
+        permission.setFullAccess(request.isFullAccess());
         if(Objects.nonNull(request.getStartDate()))
             permission.setStartDate(LocalDate.parse(request.getStartDate()));
         else

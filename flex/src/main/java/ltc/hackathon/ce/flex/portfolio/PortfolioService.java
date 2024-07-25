@@ -96,24 +96,43 @@ public class PortfolioService {
             user.setCreatedOn(Timestamp.from(Instant.now()));
             userRepo.save(user);
         }
-        PermissionId id = new PermissionId();
-        id.setEmail(request.getEmail());
-        id.setAccountEmail(request.getAccountEmail());
-        id.setPortfolioId(Integer.valueOf(request.getPortfolioId()));
-        Permission permission = new Permission();
-        permission.setId(id);
+        if(request.isFullAccess()){
+            List<Portfolio> portfolioList = new ArrayList<>();
+            portfolioList = portfolioRepo.findByEmail(request.getAccountEmail());
+            for(Portfolio portfolio : portfolioList){
+                PermissionId id = new PermissionId();
+                id.setEmail(request.getEmail());
+                id.setAccountEmail(request.getAccountEmail());
+                id.setPortfolioId(Integer.valueOf(portfolio.getPortfolioId()));
+                Permission permission = new Permission();
+                permission.setId(id);
+                permission.setCanPay(true);
+                permission.setCanView(true);
+                permission.setFullAccess(true);
+                permission.setAccessPermanent(true);
+                permRepo.save(permission);
+            }
+        }
+        {
+            PermissionId id = new PermissionId();
+            id.setEmail(request.getEmail());
+            id.setAccountEmail(request.getAccountEmail());
+            id.setPortfolioId(Integer.valueOf(request.getPortfolioId()));
+            Permission permission = new Permission();
+            permission.setId(id);
 
-        permission.setCanView(request.isCanView());
-        permission.setCanPay(request.isCanPay());
-        permission.setFullAccess(request.isFullAccess());
-        if(Objects.nonNull(request.getStartDate()))
-            permission.setStartDate(LocalDate.parse(request.getStartDate()));
-        else
-            permission.setStartDate(LocalDate.now());
-        if(Objects.nonNull(request.getEndDate()))
-            permission.setEndDate(LocalDate.parse(request.getEndDate()));
-        permission.setAccessPermanent(request.isAccessPermanent());
-        permRepo.save(permission);
+            permission.setCanView(request.isCanView());
+            permission.setCanPay(request.isCanPay());
+            permission.setFullAccess(request.isFullAccess());
+            if (Objects.nonNull(request.getStartDate()))
+                permission.setStartDate(LocalDate.parse(request.getStartDate()));
+            else
+                permission.setStartDate(LocalDate.now());
+            if (Objects.nonNull(request.getEndDate()))
+                permission.setEndDate(LocalDate.parse(request.getEndDate()));
+            permission.setAccessPermanent(request.isAccessPermanent());
+            permRepo.save(permission);
+        }
         emailGenerator.sendSignUpEmail(request.getEmail(), "Added to portfolio");
         return "Successfully added companion to portfolio";
     }

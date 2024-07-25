@@ -1,7 +1,86 @@
 import 'package:flutter/material.dart';
 import 'package:flex_users/login.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class SignupPage extends StatelessWidget {
+class SignupPage extends StatefulWidget {
+  @override
+  _SignupPageState createState() => _SignupPageState();
+}
+
+class _SignupPageState extends State<SignupPage> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
+  Future<void> _signup() async {
+    final String email = _emailController.text;
+    final String password = _passwordController.text;
+    final String confirmPassword = _confirmPasswordController.text;
+
+    // Validate inputs
+    if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+      _showErrorDialog('Please fill in all fields.');
+      return;
+    }
+
+    if (password != confirmPassword) {
+      _showErrorDialog('Passwords do not match.');
+      return;
+    }
+
+    final String apiUrl = 'https://ltc-hackathon-beekeepers-wct627xdfq-el.a.run.app/signup'; // Replace with your API endpoint
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'email': email,
+          'password': password,
+          'confirmPassword': confirmPassword,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // Handle successful signup
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => LoginPage()),
+        );
+      } else {
+        // Handle failure
+        final responseData = jsonDecode(response.body);
+        _showErrorDialog(responseData['message'] ?? 'Failed to sign up.');
+      }
+    } catch (e) {
+      print('Error: $e');
+      _showErrorDialog('An error occurred. Please try again.');
+    }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,10 +129,9 @@ class SignupPage extends StatelessWidget {
               ),
               Column(
                 children: <Widget>[
-                  inputFile(label: "Username"),
-                  inputFile(label: "Email"),
-                  inputFile(label: "Password", obscureText: true),
-                  inputFile(label: "Confirm Password", obscureText: true),
+                  inputFile(controller: _emailController, label: "Email"),
+                  inputFile(controller: _passwordController, label: "Password", obscureText: true),
+                  inputFile(controller: _confirmPasswordController, label: "Confirm Password", obscureText: true),
                 ],
               ),
               Container(
@@ -70,7 +148,7 @@ class SignupPage extends StatelessWidget {
                 child: MaterialButton(
                   minWidth: double.infinity,
                   height: 60,
-                  onPressed: () {},
+                  onPressed: _signup,
                   color: Color(0xff0095FF),
                   elevation: 0,
                   shape: RoundedRectangleBorder(
@@ -123,7 +201,7 @@ class SignupPage extends StatelessWidget {
 }
 
 // Widget for text field
-Widget inputFile({label, obscureText = false}) {
+Widget inputFile({required String label, required TextEditingController controller, bool obscureText = false}) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: <Widget>[
@@ -139,6 +217,7 @@ Widget inputFile({label, obscureText = false}) {
         height: 5,
       ),
       TextField(
+        controller: controller,
         obscureText: obscureText,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),

@@ -47,6 +47,7 @@ public class AuthService {
                 newUser.setCreatedOn(Timestamp.from(Instant.now()));
                 String otp = otpGenerator.generateOtp();
                 emailGenerator.sendOtpEmail(signUpRequest.getEmail(),"Account Verification",otp);
+                newUser.setOtp(otp);
                 userRepo.save(newUser);
                 return "Sign Up Successful";
             }

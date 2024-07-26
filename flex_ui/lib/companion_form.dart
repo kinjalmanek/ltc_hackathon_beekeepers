@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class CompanionFormScreen extends StatefulWidget {
+  final String portfolioId;
+
+  CompanionFormScreen({required this.portfolioId});
+
   @override
   _CompanionFormScreenState createState() => _CompanionFormScreenState();
 }
@@ -11,12 +17,12 @@ class _CompanionFormScreenState extends State<CompanionFormScreen> {
   String email = '';
   String countryCode = '';
   String phoneNumber = '';
-  String accessLevel = '';
   DateTime? startDate;
   DateTime? endDate;
 
-  // Radio button values
-  String? accessType;
+  // Checkbox values
+  bool isPermanentAccess = false;
+  bool isFullAccess = false;
 
   @override
   Widget build(BuildContext context) {
@@ -79,28 +85,24 @@ class _CompanionFormScreenState extends State<CompanionFormScreen> {
               Text('Access Level', style: TextStyle(fontSize: 18.0)),
               Row(
                 children: <Widget>[
-                  Radio<String>(
-                    value: 'permanent',
-                    groupValue: accessType,
+                  Checkbox(
+                    value: isPermanentAccess,
                     onChanged: (value) {
                       setState(() {
-                        accessType = value;
-                        accessLevel = 'Permanent Access';
-                        // Reset start date and end date when switching access type
-                        startDate = null;
-                        endDate = null;
+                        isPermanentAccess = value ?? false;
                       });
                     },
                   ),
                   Text('Permanent Access'),
-                  SizedBox(width: 20.0),
-                  Radio<String>(
-                    value: 'full',
-                    groupValue: accessType,
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Checkbox(
+                    value: isFullAccess,
                     onChanged: (value) {
                       setState(() {
-                        accessType = value;
-                        accessLevel = 'Full Account Access';
+                        isFullAccess = value ?? false;
                       });
                     },
                   ),
@@ -113,7 +115,7 @@ class _CompanionFormScreenState extends State<CompanionFormScreen> {
                   Expanded(
                     flex: 1,
                     child: ElevatedButton(
-                      onPressed: accessType == 'permanent'
+                      onPressed: isPermanentAccess
                           ? null
                           : () {
                         _selectStartDate(context);
@@ -125,7 +127,7 @@ class _CompanionFormScreenState extends State<CompanionFormScreen> {
                   Expanded(
                     flex: 1,
                     child: ElevatedButton(
-                      onPressed: accessType == 'permanent'
+                      onPressed: isPermanentAccess
                           ? null
                           : () {
                         _selectEndDate(context);
@@ -177,13 +179,47 @@ class _CompanionFormScreenState extends State<CompanionFormScreen> {
     }
   }
 
-  void _addCompanion() {
-    // Implement logic to add companion using the form data
-    print('Name: $name');
-    print('Email: $email');
-    print('Phone Number: $countryCode $phoneNumber');
-    print('Access Level: $accessLevel');
-    print('Start Date: $startDate');
-    print('End Date: $endDate');
+  Future<void> _addCompanion() async {
+    final String apiUrl = 'https://your-api-url.com/add-companion'; // Replace with your API URL
+
+    final Map<String, dynamic> data = {
+      'name': name,
+      'email': email,
+      'countryCode': countryCode,
+      'phoneNumber': phoneNumber,
+      'permanentAccess': isPermanentAccess,
+      'fullAccess': isFullAccess,
+      'startDate': startDate?.toIso8601String(),
+      'endDate': endDate?.toIso8601String(),
+      'portfolioId': widget.portfolioId, // Include portfolioId in the request
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode(data),
+      );
+
+      if (response.statusCode == 200) {
+        // Handle success
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Companion added successfully')),
+        );
+        Navigator.pop(context); // Go back to the previous screen
+      } else {
+        // Handle error
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to add companion')),
+        );
+      }
+    } catch (e) {
+      print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred')),
+      );
+    }
   }
 }

@@ -20,6 +20,7 @@ class _BankAccountSummaryScreenState extends State<BankAccountSummaryScreen> {
   bool isLoading = true; // Loading indicator
   List<dynamic> companionsList = []; // To store companions data
   List<Loan> loans = []; // To store loans data
+  String? portfolioId; // To store the portfolio ID
 
   @override
   void initState() {
@@ -42,7 +43,7 @@ class _BankAccountSummaryScreenState extends State<BankAccountSummaryScreen> {
           accountBalance = double.parse(responseData['accountBalance']);
           companionsList = responseData['companions'];
           loans = (responseData['loans'] as List).map((json) => Loan.fromJson(json)).toList(); // Update loans list
-          print(loans);
+          portfolioId = responseData['portfolioId']; // Store portfolioId
           isLoading = false;
         });
       } else {
@@ -104,12 +105,17 @@ class _BankAccountSummaryScreenState extends State<BankAccountSummaryScreen> {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CompanionFormScreen(),
-                    ),
-                  );
+                  if (portfolioId != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CompanionFormScreen(portfolioId: portfolioId!),
+                      ),
+                    );
+                  } else {
+                    // Handle case where portfolioId is not available
+                    print('Portfolio ID is not available');
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(

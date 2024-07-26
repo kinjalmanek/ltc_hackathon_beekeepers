@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface PermRepo extends JpaRepository<Permission,PermissionId>{
     Optional<List<Permission>> findAllByIdAccountEmail(String accountEmail);
+    Optional<List<Permission>> findAllByIdEmail(String email);
 }

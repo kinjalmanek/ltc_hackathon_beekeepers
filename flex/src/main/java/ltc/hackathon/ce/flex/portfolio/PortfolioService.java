@@ -75,9 +75,7 @@ public class PortfolioService {
             response.getBills().addAll(bills);
             response.getCompanions().addAll(buildCompanions(email));
         }
-        else {
-
-        }
+        response.getAdmirers().addAll(buildAdmirers(email));
         return response;
     }
 
@@ -154,8 +152,35 @@ public class PortfolioService {
             else {
                 companion = companions.stream().filter(x -> x.getEmail().equals(permission.getId().getEmail())).findFirst().get();
             }
-            Access access = new Access();
-            switch (portfolio.getProductType()){
+            companion.getAccessList().add(buildAccess(permission, portfolio));
+        }
+        return companions;
+    }
+
+    List<Admirer> buildAdmirers(String email){
+        List<Admirer> admirers = new ArrayList<>();
+        List<Permission> permissionList = permRepo.findAllByIdEmail(email).orElse(new ArrayList<>());
+        for(Permission permission : permissionList){
+            Admirer admirer;
+            if(admirers.stream().noneMatch((x) -> x.getEmail().equals(permission.getId().getAccountEmail()))){
+                admirer = new Admirer();
+                admirer.setEmail(permission.getId().getAccountEmail());
+                admirer.setName(userRepo.findByEmail(permission.getId().getAccountEmail()).get().getName());
+                admirers.add(admirer);
+            }
+            else{
+                admirer = admirers.stream().filter(x -> x.getEmail().equals(permission.getId().getAccountEmail())).findFirst().get();
+            }
+
+            admirer.getAccessList().add(buildAccess(permission, null));
+        }
+        return admirers;
+    }
+
+    private Access buildAccess(Permission permission, Portfolio portfolio) {
+        Access access = new Access();
+        if(Objects.nonNull(portfolio)) {
+            switch (portfolio.getProductType()) {
                 case "BALANCE": {
                     access.setBalanceCheck(true);
                     break;
@@ -180,15 +205,14 @@ public class PortfolioService {
                     break;
                 }
             }
-            access.setPermanent(permission.isAccessPermanent());
-            access.setCanView(permission.isCanView());
-            access.setCanPay(permission.isCanPay());
-            if(Objects.nonNull(permission.getStartDate()))
-                access.setAccessStartDate(permission.getStartDate().toString());
-            if(Objects.nonNull(permission.getEndDate()))
-                access.setAccessEndDate(permission.getEndDate().toString());
-            companion.getAccessList().add(access);
         }
-        return companions;
+        access.setPermanent(permission.isAccessPermanent());
+        access.setCanView(permission.isCanView());
+        access.setCanPay(permission.isCanPay());
+        if(Objects.nonNull(permission.getStartDate()))
+            access.setAccessStartDate(permission.getStartDate().toString());
+        if(Objects.nonNull(permission.getEndDate()))
+            access.setAccessEndDate(permission.getEndDate().toString());
+        return access;
     }
 }

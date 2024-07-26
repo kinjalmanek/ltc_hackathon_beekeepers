@@ -2,7 +2,6 @@ import 'package:flex_users/account_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'home_page.dart';  // Import the HomePage
 
 class LoginPage extends StatefulWidget {
   @override
@@ -39,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
             builder: (BuildContext context) {
               return AlertDialog(
                 title: Text("Login Successful"),
-                content: Text("You will be redirected to the Home Page."),
+                content: Text("You will be redirected to the Account Summary Page."),
                 actions: <Widget>[
                   TextButton(
                     child: Text("OK"),

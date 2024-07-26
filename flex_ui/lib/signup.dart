@@ -12,6 +12,8 @@ class _SignupPageState extends State<SignupPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _otpController = TextEditingController();
+  String _email = '';
 
   Future<void> _signup() async {
     final String email = _emailController.text;
@@ -46,10 +48,10 @@ class _SignupPageState extends State<SignupPage> {
 
       if (response.statusCode == 200) {
         // Handle successful signup
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => LoginPage()),
-        );
+        setState(() {
+          _email = email;
+        });
+        _showOtpDialog();
       } else {
         // Handle failure
         final responseData = jsonDecode(response.body);
@@ -59,6 +61,74 @@ class _SignupPageState extends State<SignupPage> {
       print('Error: $e');
       _showErrorDialog('An error occurred. Please try again.');
     }
+  }
+
+  Future<void> _verifyOtp() async {
+    final String otp = _otpController.text;
+
+    if (otp.isEmpty) {
+      _showErrorDialog('Please enter the OTP.');
+      return;
+    }
+
+    final String apiUrl = 'https://ltc-hackathon-beekeepers-wct627xdfq-el.a.run.app/verify'; // Replace with your API endpoint
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'email': _email,
+          'otp': otp,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => LoginPage()),
+        );
+      } else {
+        final responseData = jsonDecode(response.body);
+        _showErrorDialog(responseData['message'] ?? 'Failed to verify OTP.');
+      }
+    } catch (e) {
+      print('Error: $e');
+      _showErrorDialog('An error occurred. Please try again.');
+    }
+  }
+
+  void _showOtpDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Enter OTP'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              TextField(
+                controller: _otpController,
+                decoration: InputDecoration(
+                  labelText: 'OTP',
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Verify'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _verifyOtp();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _showErrorDialog(String message) {

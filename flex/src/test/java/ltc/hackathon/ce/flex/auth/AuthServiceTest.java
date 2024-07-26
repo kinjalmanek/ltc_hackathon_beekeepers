@@ -1,4 +1,3 @@
-/*
 package ltc.hackathon.ce.flex.auth;
 
 import ltc.hackathon.ce.flex.request.LoginRequest;
@@ -8,18 +7,20 @@ import ltc.hackathon.ce.flex.util.EmailGenerator;
 import ltc.hackathon.ce.flex.util.OtpGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class AuthServiceTest {
 
     @InjectMocks
@@ -33,11 +34,6 @@ public class AuthServiceTest {
 
     @Mock
     private OtpGenerator otpGenerator;
-
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     public void testLoginSuccess() {
@@ -148,4 +144,3 @@ public class AuthServiceTest {
         assertEquals("Invalid OTP", thrown.getMessage());
     }
 }
-*/

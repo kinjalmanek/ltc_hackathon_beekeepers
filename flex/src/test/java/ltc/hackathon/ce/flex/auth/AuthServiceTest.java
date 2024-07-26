@@ -5,9 +5,6 @@ import ltc.hackathon.ce.flex.request.SignUpRequest;
 import ltc.hackathon.ce.flex.request.VerifyRequest;
 import ltc.hackathon.ce.flex.util.EmailGenerator;
 import ltc.hackathon.ce.flex.util.OtpGenerator;
-import ltc.hackathon.ce.flex.auth.User; // Make sure to import your User model
-import ltc.hackathon.ce.flex.auth.UserRepo; // Make sure to import your UserRepo
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -15,8 +12,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
